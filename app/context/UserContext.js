@@ -17,21 +17,21 @@ const userReducer = (state = initialState, payload) => {
     case 'sing-in':
       console.log('Bienvenido al sistema');
       return {...state, user: payload.data, active: true};
-    case 'sing':
+    case 'sign':
       saveUser(payload.data).then((msg) => {
         console.log('Usuario guardado');
       });
       Snackbar.show({
-        title: 'Inicio de sesion exitoso ',
+        text: 'Inicio de sesion exitoso ',
         duration: Snackbar.LENGTH_LONG,
       });
       return {...state, user: payload.data, active: true};
-    case 'sing-out':
+    case 'sign-out':
       deleteUser().then((msg) => {
         console.log(msg);
       });
       Snackbar.show({
-        title: 'Sesión expirada ',
+        text: 'Sesión expirada ',
         duration: Snackbar.LENGTH_LONG,
       });
       return {...state, user: payload.data, active: false};
@@ -44,7 +44,7 @@ const UserContext = createContext(initialState);
 function UserProvider(props) {
   const [login, loginAction] = useReducer(userReducer, initialState);
   return (
-    <UserContext.Provider value={[login, loginActio]}>
+    <UserContext.Provider value={[login, loginAction]}>
       {props.children}
     </UserContext.Provider>
   );

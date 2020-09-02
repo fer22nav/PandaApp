@@ -1,15 +1,16 @@
-import React, {Component, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Text, View, TouchableOpacity, StatusBar, Image} from 'react-native';
 import {mainStyles, loginStyles} from '@styles/styles';
 import MyTextInput from '@components/MyTextInput';
+import MyButton from '@components/MyButton';
+import {UserContext} from '@context/UserContext';
 import color from '@styles/colors';
 
-function goToScreen(props, routeName) {
-  props.navigation.navigate(routeName);
-}
-
 export default function LoginScreen(props) {
-  const [hidePassword, SetHidePassword] = useState(false);
+  const [login, loginAction] = useContext(UserContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [hidePassword, setHidePassword] = useState(false);
   return (
     <View style={[mainStyles.container, {padding: 40}]}>
       <StatusBar backgroundColor={color.BLUE} translucent={true} />
@@ -24,6 +25,8 @@ export default function LoginScreen(props) {
         keyboardType="email-address"
         placeholder="E-mail"
         image="user"
+        value={email}
+        onChangeText={(email) => setEmail(email)}
       />
       <MyTextInput
         keyboardType={null}
@@ -31,22 +34,18 @@ export default function LoginScreen(props) {
         image="lock"
         bolGone={true}
         secureTextEntry={hidePassword}
-        onPress={() => SetHidePassword(!hidePassword)}
+        onPress={() => setHidePassword(!hidePassword)}
+        value={password}
+        onChangeText={(password) => setPassword(password)}
       />
-      <View style={mainStyles.btnMain}>
-        <TouchableOpacity onPress={() => goToScreen(props, 'Home')}>
-          <Text style={mainStyles.btntxt}>Iniciar sesion</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={mainStyles.btnTransparent}>
-        <TouchableOpacity onPress={() => goToScreen(props, 'Registration')}>
-          <Text style={[mainStyles.btntxt, {color: color.BLUE}]}>
-            Registrarse
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <MyButton title="Iniciar sesion" onPress={() => logIn()} />
+      <MyButton
+        title="Registrarse"
+        transparent={true}
+        onPress={() => goToScreen('Registration')}
+      />
       <View>
-        <TouchableOpacity onPress={() => goToScreen(props, 'RecoverPassword')}>
+        <TouchableOpacity onPress={() => goToScreen('RecoverPassword')}>
           <Text
             style={[
               mainStyles.txtTransparent,
@@ -58,4 +57,18 @@ export default function LoginScreen(props) {
       </View>
     </View>
   );
+
+  function logIn() {
+    loginAction({
+      type: 'sign',
+      data: {
+        email,
+        password,
+      },
+    });
+    goToScreen('Home');
+  }
+  function goToScreen(routeName) {
+    props.navigation.navigate(routeName);
+  }
 }

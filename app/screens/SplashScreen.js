@@ -28,6 +28,7 @@ export default function SplashScreen(props) {
       />
     </View>
   );
+
   async function fetchSesion(loginAction) {
     const response = await getUser();
     console.log(response);

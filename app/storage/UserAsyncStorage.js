@@ -2,10 +2,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const USER_KEY = '@usuario:key';
 
-async function saveUser(usuario) {
+async function saveUser(user) {
   try {
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(usuario));
-    return JSON.stringify(usuario);
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+    return JSON.stringify(user);
   } catch (error) {
     //Error
     console.log('error al guardar: ' + error.message);
